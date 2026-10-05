@@ -31,7 +31,7 @@ func main() {
 		for line := range linesChan {
 			fmt.Println(line)
 		}
-		fmt.Println("Connection to", conn.RemoteAddr(), "closed")
+		fmt.Println("Connection to ", conn.RemoteAddr(), "closed")
 	}
 }
 
@@ -42,20 +42,19 @@ func getLinesChannel(f io.ReadCloser) <-chan string {
 		defer close(lines)
 		currentLineContents := ""
 		for {
-			buffer := make([]byte, 8)
-			n, err := f.Read(buffer)
+			b := make([]byte, 8)
+			n, err := f.Read(b)
 			if err != nil {
 				if currentLineContents != "" {
 					lines <- currentLineContents
-					currentLineContents = ""
 				}
 				if errors.Is(err, io.EOF) {
 					break
 				}
 				fmt.Printf("error: %s\n", err.Error())
-				break
+				return
 			}
-			str := string(buffer[:n])
+			str := string(b[:n])
 			parts := strings.Split(str, "\n")
 			for i := 0; i < len(parts)-1; i++ {
 				lines <- fmt.Sprintf("%s%s", currentLineContents, parts[i])

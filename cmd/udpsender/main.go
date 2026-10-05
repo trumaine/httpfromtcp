@@ -23,7 +23,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	fmt.Printf("Sending to %s. Type your message and press Enter to send. Press Ctrl+C to exit. \n", serverAddr)
+	fmt.Printf("Sending to %s. Type your message and press Enter to send. Press Ctrl+C to exit.\n", serverAddr)
 
 	reader := bufio.NewReader(os.Stdin)
 
