@@ -60,5 +60,12 @@ func headerLineFromString(str string) (key string, value string, err error) {
 }
 
 func (h Headers) Set(key, value string) {
+	v, ok := h[key]
+	if ok {
+		value = strings.Join([]string{
+			v,
+			value,
+		}, ", ")
+	}
 	h[key] = value
 }
