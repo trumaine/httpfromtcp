@@ -3,6 +3,7 @@ package headers
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -40,8 +41,15 @@ func headerLineFromString(str string) (key string, value string, err error) {
 		return "", "", fmt.Errorf("invalid header line: %s", str)
 	}
 
-	key = parts[0]
-	if strings.ContainsAny(key, " \t") {
+	key = strings.ToLower(parts[0])
+	// Regex check each character in the key from the beginning to the end.
+	// - Uppercase: A-Z
+	// - Lowercase: a-z
+	// - Digits: 0-9
+	// - Special Characters: !#$&'*+-.^_`|~
+	// - []+: Can match one or more of the allowed characters
+	r, _ := regexp.Compile("^[A-Za-z0-9!#$&'*+-.^_`|~]+$")
+	if strings.ContainsAny(key, " \t") || !r.MatchString(key) {
 		return "", "", fmt.Errorf("invalid header name: %s", key)
 	}
 
