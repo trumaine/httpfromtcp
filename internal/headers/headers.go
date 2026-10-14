@@ -59,7 +59,14 @@ func headerLineFromString(str string) (key string, value string, err error) {
 	return key, value, nil
 }
 
+func (h Headers) Get(key string) (string, bool) {
+	key = strings.ToLower(key)
+	v, ok := h[key]
+	return v, ok
+}
+
 func (h Headers) Set(key, value string) {
+	key = strings.ToLower(key)
 	v, ok := h[key]
 	if ok {
 		value = strings.Join([]string{
@@ -68,12 +75,6 @@ func (h Headers) Set(key, value string) {
 		}, ", ")
 	}
 	h[key] = value
-}
-
-func (h Headers) Get(key string) (string, bool) {
-	key = strings.ToLower(key)
-	v, ok := h[key]
-	return v, ok
 }
 
 func (h Headers) Override(key, value string) {
